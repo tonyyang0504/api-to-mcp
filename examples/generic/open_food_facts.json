@@ -1,0 +1,176 @@
+{
+ "id": "open_food_facts",
+ "category": "generic",
+ "label": "Open Food Facts",
+ "docs_url": "https://openfoodfacts.github.io/openfoodfacts-server/api/ref-v2/",
+ "verified_at": "2026-10-01",
+ "version": "0.1.0",
+ "adapter": {
+  "base_url": "https://world.openfoodfacts.org",
+  "auth": {
+   "type": "none"
+  },
+  "rate_per_second": 0.15,
+  "tools": {
+   "get_product": {
+    "title": "Get Product Details",
+    "description": "Get Product Details Fetches product details by its unique barcode. Can return all product details or specific fields like knowledge panels. Use the `blame` parameter to include information about who last modified each field of the product.",
+    "method": "GET",
+    "path": "/api/v2/product/{code}",
+    "input": {
+     "type": "object",
+     "properties": {
+      "code": {
+       "type": "string",
+       "description": "The barcode of the product to be fetched"
+      },
+      "cc": {
+       "type": "string",
+       "description": "2 letter code of the country of the user. Used for localizing some fields in returned values (e.g. knowledge panels). If not passed, the country may be inferred by the IP address of the request."
+      },
+      "lc": {
+       "type": "string",
+       "description": "2 letter code of the language of the user. Used for localizing some fields in returned values (e.g. knowledge panels). If not passed, the language may be inferred by the domain name prefix."
+      },
+      "fields": {
+       "type": "string",
+       "pattern": "^[a-zA-Z0-9_.-]+(,[a-zA-Z0-9_.-]+)*$",
+       "description": "Specific fields to return. Use 'knowledge_panels' for Knowledge Panels only."
+      }
+     },
+     "required": [
+      "code"
+     ]
+    },
+    "params": {
+     "cc": "cc",
+     "lc": "lc",
+     "fields": "fields"
+    },
+    "docs": "https://openfoodfacts.github.io/openfoodfacts-server/api/ref-v2/#get-product-by-code",
+    "result": {
+     "root": "product"
+    }
+   },
+   "search_products": {
+    "title": "Search Products",
+    "description": "Search Products Search request allows you to get products that match your search criteria. It allows you create many custom APIs for your use case. If a search query parameter has multiple values, separate them with commas (`,`). When filtering with a language-specific parameter (`fr`, `de`, `en`, etc.), specify the language code in the parameter name (for example: `categories_tags_en`). **Important:** search API v2 does not support full text request (search_term), you have to use [search API v1](https://wiki.openfoodfacts.org/API/Read/Search) for that. Upcoming [search-a-licious project](https://github.com/openfoodfacts/search-a-licious) will fix that. ### Limiting results You can limit the size of returned objects thanks to the `fields` object (see below). Example: `fields=code,product_name,brands,attribute_groups` Please use it as much as possible to avoid overloading the servers. The search endpoint uses pagination: see `page` and `page_size` parameters. **Beware:** `page_count` i…",
+    "method": "GET",
+    "path": "/api/v2/search",
+    "input": {
+     "type": "object",
+     "properties": {
+      "brands_tags": {
+       "type": "string",
+       "description": "The brands_tags of product(s) you are searching for. The [Open Food Facts Web App](https://world.openfoodfacts.org/facets/brands) has a list of possible values for `brands`. Taxonomized values are available at https://static.openfoodfacts.org/data/taxonomies/brands.json You can use multiple values…"
+      },
+      "categories_tags": {
+       "type": "string",
+       "description": "The category of product(s) you are searching for. The [Open Food Facts Web App](https://world.openfoodfacts.org/facets/categories) has a list of possible values for `categories`. Translated values are available at https://static.openfoodfacts.org/data/taxonomies/categories.json You can use multiple…"
+      },
+      "nutrition_grades_tags": {
+       "type": "string",
+       "description": "The nutrition_grades_tags of product(s) you are searching for. The [Open Food Facts Web App](https://world.openfoodfacts.org/facets/nutrition-grades) has a list of possible values for `nutrition-grades`. You can use multiple values by using a comma separated list. You can add a \"-\" before values to…"
+      },
+      "fields": {
+       "type": "string",
+       "pattern": "^[a-zA-Z0-9_.-]+(,[a-zA-Z0-9_.-]+)*$",
+       "description": "Specific fields to return. Use 'knowledge_panels' for Knowledge Panels only."
+      },
+      "sort_by": {
+       "type": "string",
+       "enum": [
+        "product_name",
+        "last_modified_t",
+        "scans_n",
+        "unique_scans_n",
+        "created_t",
+        "completeness",
+        "popularity_key",
+        "nutriscore_score",
+        "nova_score",
+        "nothing",
+        "ecoscore_score"
+       ],
+       "description": "The allowed values used to sort/order the search results. * `product_name` sorts on name * `ecoscore_score`, `nova_score`, `nutriscore_score` rank on the [Eco-Score](https://world.openfoodfacts.org/eco-score-the-environmental-impact-of-food-products), [Nova](https://world.openfoodfacts.org/nova), o…"
+      },
+      "page": {
+       "type": "integer",
+       "description": "The page number you request to view (eg. in search results spanning multiple pages)"
+      },
+      "page_size": {
+       "type": "integer",
+       "description": "The number of elements should be sent per page"
+      }
+     }
+    },
+    "params": {
+     "brands_tags": "brands_tags",
+     "categories_tags": "categories_tags",
+     "nutrition_grades_tags": "nutrition_grades_tags",
+     "fields": "fields",
+     "sort_by": "sort_by",
+     "page": "page",
+     "page_size": "page_size"
+    },
+    "docs": "https://openfoodfacts.github.io/openfoodfacts-server/api/ref-v2/#get-search",
+    "result": {
+     "root": "products"
+    }
+   },
+   "suggest_tags": {
+    "title": "Suggest tags",
+    "description": "Get Suggestions For example , Dave is looking for packaging_shapes that contain the term \"fe\", all packaging_shapes containing \"fe\" will be returned. This is useful if you have a search in your application, for a specific product field.",
+    "method": "GET",
+    "path": "/cgi/suggest.pl",
+    "input": {
+     "type": "object",
+     "properties": {
+      "tagtype": {
+       "type": "string",
+       "description": "Type of a tag / id of a tags taxonomy (e.g. categories, labels, ingredients, etc.)"
+      },
+      "term": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "tagtype"
+     ]
+    },
+    "params": {
+     "tagtype": "tagtype",
+     "term": "term"
+    },
+    "docs": "https://openfoodfacts.github.io/openfoodfacts-server/api/ref-v2/#get-cgi-suggest.pl"
+   },
+   "get_attribute_groups": {
+    "title": "Get Attribute Groups",
+    "description": "Get Attribute Groups Attributes are at the heart of personal search. They score the products according to different criterias, which could then be matched to a user's preferences. This API helps you list attributes and display them in your application, for the user to choose the importance of each criteria. note: `/api/v2/attribute_groups_{lc}` is also a valid route, but consider it deprecated",
+    "method": "GET",
+    "path": "/api/v2/attribute_groups",
+    "input": {
+     "type": "object",
+     "properties": {
+      "lc": {
+       "type": "string",
+       "description": "2 letter code of the language of the user. Used for localizing some fields in returned values (e.g. knowledge panels). If not passed, the language may be inferred by the domain name prefix."
+      }
+     }
+    },
+    "params": {
+     "lc": "lc"
+    },
+    "docs": "https://openfoodfacts.github.io/openfoodfacts-server/api/ref-v2/#get-attribute-groups"
+   }
+  },
+  "config_fields": [
+   {
+    "name": "contact",
+    "required": false,
+    "help": "Your app name and contact (e.g. 'MyApp/1.0 (me@example.com)'), appended to the User-Agent as Open Food Facts asks"
+   }
+  ],
+  "user_agent_field": "contact"
+ }
+}

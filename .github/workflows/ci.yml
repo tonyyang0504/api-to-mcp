@@ -1,0 +1,55 @@
+name: ci
+on:
+  push:
+    branches: [main]
+  pull_request:
+permissions:
+  contents: read
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+# api-to-mcp runs on platform-mcp-hub. Until platform-mcp-hub is on PyPI, CI builds it from a checkout of
+# tonyyang0504/platform-mcp. While that repository is private, the checkout reads it with the read-only deploy key in
+# the PLATFORM_MCP_DEPLOY_KEY secret; once it is public the secret can be deleted (an empty key falls back to the
+# public checkout).
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ["3.10", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/checkout@v7
+        with:
+          repository: tonyyang0504/platform-mcp
+          path: _platform-mcp
+          ssh-key: ${{ secrets.PLATFORM_MCP_DEPLOY_KEY }}
+          persist-credentials: false
+      - uses: actions/setup-python@v7
+        with: { python-version: "${{ matrix.python }}" }
+      - uses: actions/setup-node@v7
+        with: { node-version: "22" }
+      - name: Install platform-mcp-hub (as a wheel, like a user) and api-to-mcp
+        run: python -m pip install -q "mcp==2.2.0" ./_platform-mcp -e ".[dev]"
+      - name: Build platform-mcp-hub's TypeScript runtime (the TypeScript half of the gates)
+        run: cd _platform-mcp/runtime/typescript && npm ci --ignore-scripts --no-audit --no-fund && npm run build
+      - name: Lint
+        run: ruff check .
+      - name: Tests (user workspace, checkout mode, both runtimes)
+        env:
+          PLATFORM_MCP_CHECKOUT: ${{ github.workspace }}/_platform-mcp
+        run: python -m pytest -q tests -rs
+      - name: Installed wheel over stdio
+        run: |
+          python -m build -q -o /tmp/dist .
+          python -m venv /tmp/v && /tmp/v/bin/pip install -q ./_platform-mcp /tmp/dist/*.whl
+          cd /tmp && /tmp/v/bin/api-to-mcp --version && API_TO_MCP_HOME=/tmp/a2m /tmp/v/bin/api-to-mcp doctor > /tmp/doctor.json || true
+          python - <<'PY'
+          import json
+          d = json.load(open("/tmp/doctor.json"))
+          assert d["mode"] in ("full", "python_only"), d
+          assert d["workspace"] == {"mode": "user", "path": "/tmp/a2m", "how": d["workspace"]["how"]}, d["workspace"]
+          print("doctor:", d["mode"])
+          PY

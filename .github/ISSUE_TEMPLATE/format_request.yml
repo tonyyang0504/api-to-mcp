@@ -1,0 +1,11 @@
+name: Documentation format request
+description: ingest_openapi cannot read a kind of API documentation
+labels: [enhancement]
+body:
+  - type: input
+    id: url
+    attributes: { label: Public example of the documentation, placeholder: "https://..." }
+    validations: { required: true }
+  - type: textarea
+    id: details
+    attributes: { label: What it is and what ingest_openapi answered }

@@ -1,0 +1,118 @@
+{
+ "id": "open_library",
+ "category": "generic",
+ "label": "Open Library",
+ "docs_url": "https://openlibrary.org/developers/api",
+ "verified_at": "2026-10-01",
+ "version": "0.1.0",
+ "adapter": {
+  "base_url": "https://openlibrary.org",
+  "auth": {
+   "type": "none"
+  },
+  "config_fields": [
+   {
+    "name": "contact",
+    "required": false,
+    "help": "Your app name and e-mail for the User-Agent, as Open Library asks of frequent callers"
+   }
+  ],
+  "user_agent_field": "contact",
+  "rate_per_second": 1,
+  "tools": {
+   "search_books": {
+    "title": "Search books",
+    "description": "Search works by title, author or any text (GET /search.json); `fields` limits the returned keys.",
+    "method": "GET",
+    "path": "/search.json",
+    "input": {
+     "type": "object",
+     "properties": {
+      "q": {
+       "type": "string",
+       "description": "Solr query, e.g. 'the lord of the rings'"
+      },
+      "title": {
+       "type": "string"
+      },
+      "author": {
+       "type": "string"
+      },
+      "limit": {
+       "type": "integer",
+       "minimum": 1,
+       "maximum": 100
+      },
+      "page": {
+       "type": "integer",
+       "minimum": 1
+      },
+      "fields": {
+       "type": "string",
+       "description": "Comma-separated fields, e.g. key,title,author_name,first_publish_year"
+      }
+     }
+    },
+    "params": {
+     "q": "q",
+     "title": "title",
+     "author": "author",
+     "limit": "limit",
+     "page": "page",
+     "fields": "fields"
+    },
+    "result": {
+     "root": "docs"
+    },
+    "docs": "https://openlibrary.org/dev/docs/api/search"
+   },
+   "get_work": {
+    "title": "Get a work",
+    "description": "One work by its Open Library id, e.g. OL45804W (GET /works/{id}.json).",
+    "method": "GET",
+    "path": "/works/{work_id}.json",
+    "input": {
+     "type": "object",
+     "properties": {
+      "work_id": {
+       "type": "string",
+       "description": "e.g. OL45804W"
+      }
+     },
+     "required": [
+      "work_id"
+     ]
+    },
+    "result": {
+     "select": [
+      "key",
+      "title",
+      "first_publish_date",
+      "subjects",
+      "authors"
+     ]
+    },
+    "docs": "https://openlibrary.org/dev/docs/api/books"
+   },
+   "get_author": {
+    "title": "Get an author",
+    "description": "One author by id, e.g. OL23919A (GET /authors/{id}.json).",
+    "method": "GET",
+    "path": "/authors/{author_id}.json",
+    "input": {
+     "type": "object",
+     "properties": {
+      "author_id": {
+       "type": "string",
+       "description": "e.g. OL23919A"
+      }
+     },
+     "required": [
+      "author_id"
+     ]
+    },
+    "docs": "https://openlibrary.org/dev/docs/api/authors"
+   }
+  }
+ }
+}

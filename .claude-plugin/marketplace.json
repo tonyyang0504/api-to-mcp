@@ -1,0 +1,13 @@
+{
+  "name": "api-to-mcp",
+  "owner": { "name": "api-to-mcp contributors", "url": "https://github.com/tonyyang0504/api-to-mcp" },
+  "metadata": { "description": "api-to-mcp: API documentation in, a tested MCP server out (served by platform-mcp-hub)." },
+  "plugins": [
+    {
+      "name": "api-to-mcp",
+      "source": "./",
+      "description": "API docs → standard MCP server (skill /api-to-mcp, the api-to-mcp agent and MCP server).",
+      "category": "development"
+    }
+  ]
+}

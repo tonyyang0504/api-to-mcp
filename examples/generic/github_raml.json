@@ -1,0 +1,179 @@
+{
+ "id": "github_raml",
+ "category": "generic",
+ "label": "GitHub REST (from the RAML 0.8 description)",
+ "docs_url": "https://docs.github.com/en/rest",
+ "verified_at": "2026-10-01",
+ "version": "0.1.0",
+ "adapter": {
+  "base_url": "https://api.github.com",
+  "auth": {
+   "type": "none",
+   "extra_headers": {
+    "Authorization": "token"
+   },
+   "fields": [
+    {
+     "name": "token",
+     "required": false,
+     "help": "Optional: 'Bearer <personal access token>' for 5,000 requests/hour instead of 60 (https://docs.github.com/en/rest/authentication)"
+    }
+   ]
+  },
+  "headers": {
+   "Accept": "application/vnd.github+json",
+   "X-GitHub-Api-Version": "2022-11-28"
+  },
+  "rate_per_second": 0.5,
+  "tools": {
+   "search_repositories": {
+    "title": "Search repositories",
+    "description": "Search repositories (GET /search/repositories): q with GitHub's search qualifiers; sort by stars, forks or updated.",
+    "method": "GET",
+    "path": "/search/repositories",
+    "input": {
+     "type": "object",
+     "properties": {
+      "q": {
+       "type": "string",
+       "description": "Search terms and qualifiers, e.g. 'mcp language:python'"
+      },
+      "sort": {
+       "type": "string",
+       "enum": [
+        "stars",
+        "forks",
+        "updated"
+       ]
+      },
+      "order": {
+       "type": "string",
+       "enum": [
+        "asc",
+        "desc"
+       ]
+      },
+      "per_page": {
+       "type": "integer",
+       "minimum": 1,
+       "maximum": 100
+      },
+      "page": {
+       "type": "integer",
+       "minimum": 1
+      }
+     },
+     "required": [
+      "q"
+     ]
+    },
+    "params": {
+     "q": "q",
+     "sort": "sort",
+     "order": "order",
+     "per_page": "per_page",
+     "page": "page"
+    },
+    "result": {
+     "root": "items",
+     "select": [
+      "full_name",
+      "html_url",
+      "description",
+      "stargazers_count",
+      "language"
+     ]
+    },
+    "docs": "https://docs.github.com/en/rest/search/search#search-repositories"
+   },
+   "get_repository": {
+    "title": "Get a repository",
+    "description": "One repository (GET /repos/{owner}/{repo}).",
+    "method": "GET",
+    "path": "/repos/{owner}/{repo}",
+    "input": {
+     "type": "object",
+     "properties": {
+      "owner": {
+       "type": "string"
+      },
+      "repo": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "owner",
+      "repo"
+     ]
+    },
+    "docs": "https://docs.github.com/en/rest/repos/repos#get-a-repository"
+   },
+   "get_user": {
+    "title": "Get a user",
+    "description": "Public profile of a user (GET /users/{username}).",
+    "method": "GET",
+    "path": "/users/{username}",
+    "input": {
+     "type": "object",
+     "properties": {
+      "username": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "username"
+     ]
+    },
+    "docs": "https://docs.github.com/en/rest/users/users#get-a-user"
+   },
+   "list_repository_issues": {
+    "title": "List repository issues",
+    "description": "Issues of a repository (GET /repos/{owner}/{repo}/issues), open by default; pull requests are included, as the API documents.",
+    "method": "GET",
+    "path": "/repos/{owner}/{repo}/issues",
+    "input": {
+     "type": "object",
+     "properties": {
+      "owner": {
+       "type": "string"
+      },
+      "repo": {
+       "type": "string"
+      },
+      "state": {
+       "type": "string",
+       "enum": [
+        "open",
+        "closed",
+        "all"
+       ]
+      },
+      "per_page": {
+       "type": "integer",
+       "minimum": 1,
+       "maximum": 100
+      }
+     },
+     "required": [
+      "owner",
+      "repo"
+     ]
+    },
+    "params": {
+     "state": "state",
+     "per_page": "per_page"
+    },
+    "result": {
+     "select": [
+      "number",
+      "title",
+      "state",
+      "html_url",
+      "user.login"
+     ]
+    },
+    "docs": "https://docs.github.com/en/rest/issues/issues#list-repository-issues"
+   }
+  }
+ }
+}

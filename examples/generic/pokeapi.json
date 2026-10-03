@@ -1,0 +1,111 @@
+{
+ "id": "pokeapi",
+ "category": "generic",
+ "label": "PokéAPI",
+ "docs_url": "https://pokeapi.co/docs/v2",
+ "verified_at": "2026-10-01",
+ "version": "0.1.0",
+ "adapter": {
+  "base_url": "https://pokeapi.co",
+  "auth": {
+   "type": "none"
+  },
+  "rate_per_second": 1,
+  "tools": {
+   "ability_retrieve": {
+    "title": "Get ability",
+    "description": "Get ability Abilities provide passive effects for Pokémon in battle or in the overworld. Pokémon have multiple possible abilities but can have only one ability at a time. Check out [Bulbapedia](http://bulbapedia.bulbagarden.net/wiki/Ability) for greater detail.",
+    "method": "GET",
+    "path": "/api/v2/ability/{id}/",
+    "input": {
+     "type": "object",
+     "properties": {
+      "id": {
+       "type": "string",
+       "description": "This parameter can be a string or an integer."
+      }
+     },
+     "required": [
+      "id"
+     ]
+    },
+    "docs": "https://pokeapi.co/docs/v2#ability_retrieve"
+   },
+   "pokemon_list": {
+    "title": "List pokemon",
+    "description": "List pokemon Pokémon are the creatures that inhabit the world of the Pokémon games. They can be caught using Pokéballs and trained by battling with other Pokémon. Each Pokémon belongs to a specific species but may take on a variant which makes it differ from other Pokémon of the same species, such as base stats, available abilities and typings. See [Bulbapedia](http://bulbapedia.bulbagarden.net/wiki/Pok%C3%A9mon_(species)) for greater detail.",
+    "method": "GET",
+    "path": "/api/v2/pokemon/",
+    "input": {
+     "type": "object",
+     "properties": {
+      "limit": {
+       "type": "integer",
+       "description": "Number of results to return per page."
+      },
+      "offset": {
+       "type": "integer",
+       "description": "The initial index from which to return the results."
+      }
+     }
+    },
+    "params": {
+     "limit": "limit",
+     "offset": "offset"
+    },
+    "docs": "https://pokeapi.co/docs/v2#pokemon_list",
+    "result": {
+     "root": "results"
+    }
+   },
+   "pokemon_retrieve": {
+    "title": "Get pokemon",
+    "description": "Get pokemon Pokémon are the creatures that inhabit the world of the Pokémon games. They can be caught using Pokéballs and trained by battling with other Pokémon. Each Pokémon belongs to a specific species but may take on a variant which makes it differ from other Pokémon of the same species, such as base stats, available abilities and typings. See [Bulbapedia](http://bulbapedia.bulbagarden.net/wiki/Pok%C3%A9mon_(species)) for greater detail.",
+    "method": "GET",
+    "path": "/api/v2/pokemon/{id}/",
+    "input": {
+     "type": "object",
+     "properties": {
+      "id": {
+       "type": "string",
+       "description": "This parameter can be a string or an integer."
+      }
+     },
+     "required": [
+      "id"
+     ]
+    },
+    "docs": "https://pokeapi.co/docs/v2#pokemon_retrieve",
+    "result": {
+     "select": [
+      "id",
+      "name",
+      "height",
+      "weight",
+      "types",
+      "base_experience"
+     ]
+    }
+   },
+   "pokemon_species_retrieve": {
+    "title": "Get pokemon species",
+    "description": "Get pokemon species A Pokémon Species forms the basis for at least one Pokémon. Attributes of a Pokémon species are shared across all varieties of Pokémon within the species. A good example is Wormadam; Wormadam is the species which can be found in three different varieties, Wormadam-Trash, Wormadam-Sandy and Wormadam-Plant.",
+    "method": "GET",
+    "path": "/api/v2/pokemon-species/{id}/",
+    "input": {
+     "type": "object",
+     "properties": {
+      "id": {
+       "type": "string",
+       "description": "This parameter can be a string or an integer."
+      }
+     },
+     "required": [
+      "id"
+     ]
+    },
+    "docs": "https://pokeapi.co/docs/v2#pokemon_species_retrieve"
+   }
+  }
+ }
+}

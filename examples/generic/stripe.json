@@ -1,0 +1,418 @@
+{
+ "id": "stripe",
+ "category": "generic",
+ "label": "Stripe",
+ "docs_url": "https://docs.stripe.com/api",
+ "verified_at": "2026-10-01",
+ "version": "0.1.0",
+ "adapter": {
+  "base_url": "https://api.stripe.com",
+  "auth": {
+   "type": "bearer",
+   "field": "secret_key",
+   "fields": [
+    {
+     "name": "secret_key",
+     "required": true,
+     "help": "Stripe secret key (sk_test_... in test mode), sent as 'Authorization: Bearer <key>' (https://docs.stripe.com/api/authentication)"
+    }
+   ]
+  },
+  "rate_per_second": 5,
+  "tools": {
+   "get_balance": {
+    "title": "Retrieve balance",
+    "description": "Retrieve balance Retrieves the current account balance, based on the authentication that was used to make the request. For a sample request, see Accounting for negative balances .",
+    "method": "GET",
+    "path": "/v1/balance",
+    "input": {
+     "type": "object",
+     "properties": {}
+    },
+    "params": {},
+    "docs": "https://docs.stripe.com/api#GetBalance"
+   },
+   "get_customer": {
+    "title": "Retrieve a customer",
+    "description": "Retrieve a customer Retrieves a Customer object.",
+    "method": "GET",
+    "path": "/v1/customers/{customer}",
+    "input": {
+     "type": "object",
+     "properties": {
+      "customer": {
+       "type": "string",
+       "maxLength": 5000
+      }
+     },
+     "required": [
+      "customer"
+     ]
+    },
+    "params": {},
+    "docs": "https://docs.stripe.com/api#GetCustomersCustomer"
+   },
+   "list_customers": {
+    "title": "List all customers",
+    "description": "List all customers Returns a list of your customers. The customers are returned sorted by creation date, with the most recent customers appearing first.",
+    "method": "GET",
+    "path": "/v1/customers",
+    "input": {
+     "type": "object",
+     "properties": {
+      "created": {
+       "type": "object",
+       "properties": {
+        "gt": {
+         "type": "integer"
+        },
+        "gte": {
+         "type": "integer"
+        },
+        "lt": {
+         "type": "integer"
+        },
+        "lte": {
+         "type": "integer"
+        }
+       },
+       "description": "Only return customers that were created during the given date interval."
+      },
+      "email": {
+       "type": "string",
+       "maxLength": 512,
+       "description": "A case-sensitive filter on the list based on the customer's `email` field. The value must be a string."
+      },
+      "ending_before": {
+       "type": "string",
+       "maxLength": 5000,
+       "description": "A cursor for use in pagination. `ending_before` is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, starting with `obj_bar`, your subsequent call can include `ending_before=obj_bar` in order to fetch the previous page of the list."
+      },
+      "limit": {
+       "type": "integer",
+       "description": "A limit on the number of objects to be returned. Limit can range between 1 and 100, and the default is 10."
+      },
+      "starting_after": {
+       "type": "string",
+       "maxLength": 5000,
+       "description": "A cursor for use in pagination. `starting_after` is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, ending with `obj_foo`, your subsequent call can include `starting_after=obj_foo` in order to fetch the next page of the list."
+      },
+      "test_clock": {
+       "type": "string",
+       "maxLength": 5000,
+       "description": "Provides a list of customers that are associated with the specified test clock. The response will not include customers with test clocks if this parameter is not set."
+      }
+     }
+    },
+    "params": {
+     "created": "created",
+     "email": "email",
+     "ending_before": "ending_before",
+     "limit": "limit",
+     "starting_after": "starting_after",
+     "test_clock": "test_clock"
+    },
+    "docs": "https://docs.stripe.com/api#GetCustomers",
+    "result": {
+     "root": "data"
+    }
+   },
+   "list_products": {
+    "title": "List all products",
+    "description": "List all products Returns a list of your products. The products are returned sorted by creation date, with the most recently created products appearing first.",
+    "method": "GET",
+    "path": "/v1/products",
+    "input": {
+     "type": "object",
+     "properties": {
+      "active": {
+       "type": "boolean",
+       "description": "Only return products that are active or inactive (e.g., pass `false` to list all inactive products)."
+      },
+      "created": {
+       "type": "object",
+       "properties": {
+        "gt": {
+         "type": "integer"
+        },
+        "gte": {
+         "type": "integer"
+        },
+        "lt": {
+         "type": "integer"
+        },
+        "lte": {
+         "type": "integer"
+        }
+       },
+       "description": "Only return products that were created during the given date interval."
+      },
+      "ending_before": {
+       "type": "string",
+       "maxLength": 5000,
+       "description": "A cursor for use in pagination. `ending_before` is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, starting with `obj_bar`, your subsequent call can include `ending_before=obj_bar` in order to fetch the previous page of the list."
+      },
+      "ids": {
+       "type": "array",
+       "items": {
+        "type": "string",
+        "maxLength": 5000
+       },
+       "description": "Only return products with the given IDs. Cannot be used with [starting_after](https://docs.stripe.com/api#list_products-starting_after) or [ending_before](https://docs.stripe.com/api#list_products-ending_before)."
+      },
+      "limit": {
+       "type": "integer",
+       "description": "A limit on the number of objects to be returned. Limit can range between 1 and 100, and the default is 10."
+      },
+      "shippable": {
+       "type": "boolean",
+       "description": "Only return products that can be shipped (i.e., physical, not digital products)."
+      },
+      "starting_after": {
+       "type": "string",
+       "maxLength": 5000,
+       "description": "A cursor for use in pagination. `starting_after` is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, ending with `obj_foo`, your subsequent call can include `starting_after=obj_foo` in order to fetch the next page of the list."
+      },
+      "url": {
+       "type": "string",
+       "maxLength": 5000,
+       "description": "Only return products with the given url."
+      }
+     }
+    },
+    "params": {
+     "active": "active",
+     "created": "created",
+     "ending_before": "ending_before",
+     "ids": "ids",
+     "limit": "limit",
+     "shippable": "shippable",
+     "starting_after": "starting_after",
+     "url": "url"
+    },
+    "docs": "https://docs.stripe.com/api#GetProducts",
+    "result": {
+     "root": "data"
+    }
+   },
+   "create_customer": {
+    "title": "Create a customer",
+    "description": "Create a customer Creates a new customer object.",
+    "method": "POST",
+    "path": "/v1/customers",
+    "input": {
+     "type": "object",
+     "properties": {
+      "address": {
+       "type": "object",
+       "properties": {
+        "city": {
+         "type": "string",
+         "maxLength": 5000
+        },
+        "country": {
+         "type": "string",
+         "maxLength": 5000
+        },
+        "line1": {
+         "type": "string",
+         "maxLength": 5000
+        },
+        "line2": {
+         "type": "string",
+         "maxLength": 5000
+        },
+        "postal_code": {
+         "type": "string",
+         "maxLength": 5000
+        },
+        "state": {
+         "type": "string",
+         "maxLength": 5000
+        }
+       },
+       "description": "optional_fields_customer_address"
+      },
+      "balance": {
+       "type": "integer",
+       "description": "An integer amount in cents (or local equivalent) that represents the customer's current balance, which affect the customer's future invoices. A negative amount represents a credit that decreases the amount due on an invoice; a positive amount increases the amount due on an invoice."
+      },
+      "business_name": {
+       "type": "string",
+       "maxLength": 150
+      },
+      "cash_balance": {
+       "type": "object",
+       "properties": {
+        "settings": {
+         "type": "object",
+         "description": "balance_settings_param"
+        }
+       },
+       "description": "Balance information and default balance settings for this customer."
+      },
+      "description": {
+       "type": "string",
+       "maxLength": 5000,
+       "description": "An arbitrary string that you can attach to a customer object. It is displayed alongside the customer in the dashboard."
+      },
+      "email": {
+       "type": "string",
+       "maxLength": 512,
+       "description": "Customer's email address. It's displayed alongside the customer in your dashboard and can be useful for searching and tracking. This may be up to *512 characters*."
+      },
+      "individual_name": {
+       "type": "string",
+       "maxLength": 150
+      },
+      "invoice_prefix": {
+       "type": "string",
+       "maxLength": 5000,
+       "description": "The prefix for the customer used to generate unique invoice numbers. Must be 1–12 uppercase letters or numbers."
+      },
+      "invoice_settings": {
+       "type": "object",
+       "properties": {
+        "custom_fields": {
+         "type": "array",
+         "items": {
+          "type": "object",
+          "description": "custom_field_params"
+         }
+        },
+        "default_payment_method": {
+         "type": "string",
+         "maxLength": 5000
+        },
+        "footer": {
+         "type": "string",
+         "maxLength": 5000
+        },
+        "rendering_options": {
+         "type": "object",
+         "description": "customer_rendering_options_param"
+        }
+       },
+       "description": "Default invoice settings for this customer."
+      },
+      "metadata": {
+       "type": "object"
+      },
+      "name": {
+       "type": "string",
+       "maxLength": 256,
+       "description": "The customer's full name or business name."
+      },
+      "next_invoice_sequence": {
+       "type": "integer",
+       "description": "The sequence to be used on the customer's next invoice. Defaults to 1."
+      },
+      "payment_method": {
+       "type": "string",
+       "maxLength": 5000
+      },
+      "phone": {
+       "type": "string",
+       "maxLength": 20,
+       "description": "The customer's phone number."
+      },
+      "preferred_locales": {
+       "type": "array",
+       "items": {
+        "type": "string",
+        "maxLength": 5000
+       },
+       "description": "Customer's preferred languages, ordered by preference."
+      },
+      "shipping": {
+       "type": "object",
+       "properties": {
+        "address": {
+         "type": "object",
+         "description": "optional_fields_customer_address"
+        },
+        "name": {
+         "type": "string",
+         "maxLength": 5000
+        },
+        "phone": {
+         "type": "string",
+         "maxLength": 5000
+        }
+       },
+       "description": "customer_shipping"
+      },
+      "source": {
+       "type": "string",
+       "maxLength": 5000
+      },
+      "tax": {
+       "type": "object",
+       "properties": {
+        "ip_address": {
+         "type": "string"
+        },
+        "validate_location": {
+         "type": "string",
+         "enum": [
+          "deferred",
+          "immediately"
+         ]
+        }
+       },
+       "description": "Tax details about the customer."
+      },
+      "tax_exempt": {
+       "type": "string",
+       "enum": [
+        "",
+        "exempt",
+        "none",
+        "reverse"
+       ],
+       "description": "The customer's tax exemption. One of `none`, `exempt`, or `reverse`."
+      },
+      "tax_id_data": {
+       "type": "array",
+       "items": {
+        "type": "object",
+        "description": "data_params"
+       },
+       "description": "The customer's tax IDs."
+      },
+      "test_clock": {
+       "type": "string",
+       "maxLength": 5000,
+       "description": "ID of the test clock to attach to the customer."
+      }
+     }
+    },
+    "body": {
+     "address": "address",
+     "balance": "balance",
+     "business_name": "business_name",
+     "cash_balance": "cash_balance",
+     "description": "description",
+     "email": "email",
+     "individual_name": "individual_name",
+     "invoice_prefix": "invoice_prefix",
+     "invoice_settings": "invoice_settings",
+     "metadata": "metadata",
+     "name": "name",
+     "next_invoice_sequence": "next_invoice_sequence",
+     "payment_method": "payment_method",
+     "phone": "phone",
+     "preferred_locales": "preferred_locales",
+     "shipping": "shipping",
+     "source": "source",
+     "tax": "tax",
+     "tax_exempt": "tax_exempt",
+     "tax_id_data": "tax_id_data",
+     "test_clock": "test_clock"
+    },
+    "body_format": "form",
+    "docs": "https://docs.stripe.com/api#PostCustomers"
+   }
+  }
+ }
+}

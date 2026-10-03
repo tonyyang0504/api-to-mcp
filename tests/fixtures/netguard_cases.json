@@ -1,0 +1,29 @@
+{
+ "_comment": "netguard.py / netguard.ts: which addresses and URLs a downloaded URL may reach. resolves = what the injected resolver answers for the host.",
+ "ips": {
+  "8.8.8.8": true, "93.184.215.14": true, "1.1.1.1": true, "2606:4700:4700::1111": true, "2a00:1450:4001:82a::200e": true,
+  "127.0.0.1": false, "127.255.255.254": false, "10.1.2.3": false, "172.16.0.1": false, "172.31.255.255": false, "172.32.0.1": true,
+  "192.168.1.1": false, "169.254.169.254": false, "100.64.0.1": false, "0.0.0.0": false, "224.0.0.1": false, "255.255.255.255": false,
+  "198.18.0.1": false, "192.0.2.10": false, "203.0.113.5": false,
+  "::1": false, "::": false, "fe80::1": false, "fc00::1": false, "fd12:3456::1": false, "ff02::1": false, "2001:db8::1": false,
+  "::ffff:127.0.0.1": false, "::ffff:8.8.8.8": true, "::ffff:a9fe:a9fe": false, "64:ff9b::a9fe:a9fe": false, "64:ff9b::808:808": true,
+  "2002:7f00:0001::1": false, "2002:0808:0808::1": true, "::127.0.0.1": false,
+  "not-an-ip": false, "": false
+ },
+ "urls": [
+  {"url": "https://cdn.example.com/a.png", "resolves": ["93.184.215.14"], "ok": true},
+  {"url": "http://cdn.example.com/a.png", "resolves": ["93.184.215.14", "2606:4700:4700::1111"], "ok": true},
+  {"url": "http://169.254.169.254/latest/meta-data/iam/security-credentials/", "resolves": [], "ok": false},
+  {"url": "http://[::1]:8080/admin", "resolves": [], "ok": false},
+  {"url": "http://[::ffff:169.254.169.254]/", "resolves": [], "ok": false},
+  {"url": "http://localhost:6379/", "resolves": ["93.184.215.14"], "ok": false},
+  {"url": "http://foo.localhost/", "resolves": ["93.184.215.14"], "ok": false},
+  {"url": "https://rebind.attacker.example/x", "resolves": ["93.184.215.14", "127.0.0.1"], "ok": false},
+  {"url": "https://internal.corp.example/x", "resolves": ["10.0.0.5"], "ok": false},
+  {"url": "https://nxdomain.example/x", "resolves": [], "ok": false},
+  {"url": "file:///etc/passwd", "resolves": [], "ok": false},
+  {"url": "ftp://cdn.example.com/a.png", "resolves": ["93.184.215.14"], "ok": false},
+  {"url": "gopher://cdn.example.com:6379/_x", "resolves": ["93.184.215.14"], "ok": false},
+  {"url": "not a url", "resolves": [], "ok": false}
+ ]
+}

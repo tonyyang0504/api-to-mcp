@@ -1,0 +1,14 @@
+# gitleaks configuration (CI: .github/workflows/secret-scan.yml). The default rules plus an allowlist for values that
+# are documentation, not secrets: tests replay vendors' published signing examples and use made-up keys, and a catalog
+# help text quotes a vendor's `curl -u USER:PASSWORD` placeholder. Anything else that matches fails the scan.
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "Test fixtures: vendor-published signing vectors and dummy credentials"
+paths = ['''^tests/''']
+
+[[allowlists]]
+description = "Documentation placeholders quoted from vendor docs"
+regexTarget = "match"
+regexes = ['''curl -u ["']?USER(NAME)?:PASSWORD''', '''-u USER(NAME)?:PASSWORD''']

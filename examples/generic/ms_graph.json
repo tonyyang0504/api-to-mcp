@@ -1,0 +1,133 @@
+{
+ "id": "ms_graph",
+ "category": "generic",
+ "label": "Microsoft Graph",
+ "docs_url": "https://learn.microsoft.com/en-us/graph/api/overview?view=graph-rest-1.0",
+ "verified_at": "2026-10-01",
+ "version": "0.1.0",
+ "adapter": {
+  "base_url": "https://graph.microsoft.com/v1.0",
+  "auth": {
+   "type": "bearer",
+   "field": "access_token",
+   "fields": [
+    {
+     "name": "access_token",
+     "required": true,
+     "help": "A Microsoft identity platform access token for Microsoft Graph with the scopes each call needs (User.Read, User.ReadBasic.All, Mail.Read), sent as 'Authorization: Bearer <token>' (https://learn.microsoft.com/en-us/graph/auth/auth-concepts)"
+    }
+   ]
+  },
+  "rate_per_second": 2,
+  "tools": {
+   "get_me": {
+    "title": "Get the signed-in user",
+    "description": "The profile of the signed-in user (GET /me). Needs User.Read.",
+    "method": "GET",
+    "path": "/me",
+    "input": {
+     "type": "object",
+     "properties": {
+      "select": {
+       "type": "string",
+       "description": "OData $select: comma-separated properties, e.g. displayName,mail"
+      }
+     }
+    },
+    "params": {
+     "$select": "select"
+    },
+    "docs": "https://learn.microsoft.com/en-us/graph/api/user-get?view=graph-rest-1.0"
+   },
+   "list_users": {
+    "title": "List users",
+    "description": "Users in the organization (GET /users), 100 per page by default, at most 999. Needs User.ReadBasic.All or User.Read.All.",
+    "method": "GET",
+    "path": "/users",
+    "input": {
+     "type": "object",
+     "properties": {
+      "top": {
+       "type": "integer",
+       "minimum": 1,
+       "maximum": 999,
+       "description": "OData $top: page size"
+      },
+      "select": {
+       "type": "string",
+       "description": "OData $select: comma-separated properties"
+      },
+      "filter": {
+       "type": "string",
+       "description": "OData $filter, e.g. startswith(displayName,'a')"
+      }
+     }
+    },
+    "params": {
+     "$top": "top",
+     "$select": "select",
+     "$filter": "filter"
+    },
+    "result": {
+     "root": "value"
+    },
+    "docs": "https://learn.microsoft.com/en-us/graph/api/user-list?view=graph-rest-1.0"
+   },
+   "get_user": {
+    "title": "Get a user",
+    "description": "One user by id or userPrincipalName (GET /users/{id}).",
+    "method": "GET",
+    "path": "/users/{user_id}",
+    "input": {
+     "type": "object",
+     "properties": {
+      "user_id": {
+       "type": "string",
+       "description": "The user's id or userPrincipalName"
+      },
+      "select": {
+       "type": "string",
+       "description": "OData $select"
+      }
+     },
+     "required": [
+      "user_id"
+     ]
+    },
+    "params": {
+     "$select": "select"
+    },
+    "docs": "https://learn.microsoft.com/en-us/graph/api/user-get?view=graph-rest-1.0"
+   },
+   "list_my_messages": {
+    "title": "List my messages",
+    "description": "Messages in the signed-in user's mailbox (GET /me/messages), newest first. Needs Mail.Read.",
+    "method": "GET",
+    "path": "/me/messages",
+    "input": {
+     "type": "object",
+     "properties": {
+      "top": {
+       "type": "integer",
+       "minimum": 1,
+       "maximum": 1000,
+       "description": "OData $top"
+      },
+      "select": {
+       "type": "string",
+       "description": "OData $select, e.g. subject,from,receivedDateTime"
+      }
+     }
+    },
+    "params": {
+     "$top": "top",
+     "$select": "select"
+    },
+    "result": {
+     "root": "value"
+    },
+    "docs": "https://learn.microsoft.com/en-us/graph/api/user-list-messages?view=graph-rest-1.0"
+   }
+  }
+ }
+}

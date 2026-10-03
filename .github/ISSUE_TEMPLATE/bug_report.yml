@@ -1,0 +1,14 @@
+name: Bug report
+description: A tool, the CLI, the plugin or the agent does something wrong
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes: { label: What happened, description: "The tool call or command, the documentation you used (URL), what you expected and what you got. Remove credentials and personal data." }
+    validations: { required: true }
+  - type: input
+    id: doctor
+    attributes: { label: "`api-to-mcp doctor` mode", placeholder: "full / python_only / blocked" }
+  - type: input
+    id: version
+    attributes: { label: Version or commit }
