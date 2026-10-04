@@ -5,7 +5,15 @@ All notable changes to api-to-mcp are recorded here. The format follows
 
 ## [Unreleased]
 
-## [0.1.0] - unreleased
+## [0.1.1] - 2026-10-05
+
+### Fixed
+- `doctor`: the dependency probe no longer imports modules from the current directory (a stray `numbers.py` made it
+  report "blocked").
+- The README, `doctor`'s TypeScript fix and `generate_server`'s `any_machine` hint now point at the published
+  packages instead of saying "not published yet".
+
+## [0.1.0] - 2026-10-04
 
 First release as its own project (until 2026-10 it was "the forge" inside platform-mcp; the history came along).
 

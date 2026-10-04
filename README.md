@@ -10,9 +10,6 @@ The result is not generated code. It is one JSON entry describing the API, which
 **generic**: its tools are the API's own operations (from an OpenAPI/Swagger description, `draft_entry` writes them),
 and the answer is passed through, with optional field selection. Any HTTP API qualifies.
 
-> **Not published yet.** `api-to-mcp` and its runtime dependency are not on PyPI yet. Until they are, install from
-> source (below); do not install the names from a registry.
-
 ## Three ways to use it
 
 - **Claude Code plugin** (skill `/api-to-mcp`, the `api-to-mcp` agent and the MCP server together):
@@ -27,12 +24,22 @@ and the answer is passed through, with optional field selection. Any HTTP API qu
 - **CLI**: every tool is a command: `api-to-mcp ingest <url>`, `api-to-mcp save jobs my_board entry.json`,
   `api-to-mcp test jobs my_board`, `api-to-mcp serve jobs my_board`, ... (`api-to-mcp --help`).
 
-## Quick start (from source, today)
+## Install
+
+```bash
+uvx --from api-to-mcp-forge api-to-mcp doctor      # or: pip install api-to-mcp-forge / uv tool install api-to-mcp-forge
+```
+
+The PyPI package is `api-to-mcp-forge` (PyPI treats `api-to-mcp` as a duplicate of an older, unrelated `apitomcp`); the
+command is `api-to-mcp`. It brings `platform-mcp-hub` (the runtime) with it; for the TypeScript half of the gates also
+`npm install -g platform-mcp-hub`.
+
+## Quick start (from source)
 
 ```bash
 git clone https://github.com/tonyyang0504/api-to-mcp && cd api-to-mcp
 uv venv -p 3.12
-uv pip install "platform-mcp-hub @ git+https://github.com/tonyyang0504/platform-mcp" -e .
+uv pip install -e .
 .venv/bin/api-to-mcp doctor                        # prerequisites and where entries will be saved
 .venv/bin/api-to-mcp ingest https://raw.githubusercontent.com/PokeAPI/pokeapi/master/openapi.yml --filter pokemon
 .venv/bin/api-to-mcp draft https://raw.githubusercontent.com/PokeAPI/pokeapi/master/openapi.yml pokeapi \
@@ -45,8 +52,6 @@ uv pip install "platform-mcp-hub @ git+https://github.com/tonyyang0504/platform-
 claude mcp add pokeapi -- "$PWD/.venv/bin/api-to-mcp" serve generic pokeapi
 ```
 
-Once published: `uvx --from api-to-mcp-forge api-to-mcp doctor`, `pip install api-to-mcp-forge`.
-The PyPI package is `api-to-mcp-forge` (PyPI treats `api-to-mcp` as a duplicate of an older, unrelated `apitomcp`); the command is `api-to-mcp`.
 
 ## Where entries go
 
@@ -80,7 +85,6 @@ verification calls read tools only. See [SECURITY.md](SECURITY.md).
 - **Live checks need access.** Keyless APIs are verified live; others need your credentials, and write tools are never
   called live.
 - **TypeScript half.** Without node and platform-mcp-hub's TypeScript runtime the gates run Python only, and say so.
-- **Unpublished.** Installation is from source until the first release.
 
 ## Built on
 

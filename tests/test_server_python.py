@@ -434,6 +434,16 @@ async def test_doctor_in_your_own_workspace(ws, monkeypatch):
 
 
 @pytest.mark.asyncio
+async def test_doctor_probe_ignores_modules_in_the_current_directory(ws):
+    # the probe runs in the workspace (or the caller's directory); a stray numbers.py there once broke pydantic's import
+    ws.mkdir(parents=True, exist_ok=True)
+    (ws / "numbers.py").write_text("raise RuntimeError('shadowed')\n")
+    err, out = await call("doctor", {})
+    probe = next(c for c in out["checks"] if c["name"] == "python + gate dependencies")
+    assert probe["ok"] and "platform-mcp-hub" in probe["detail"], probe
+
+
+@pytest.mark.asyncio
 async def test_doctor_in_a_checkout(checkout, monkeypatch):
     _fake_runtime(checkout, built=True)
     err, out = await call("doctor", {})

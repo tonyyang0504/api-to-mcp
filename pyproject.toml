@@ -1,6 +1,6 @@
 [project]
 name = "api-to-mcp-forge"
-version = "0.1.0"
+version = "0.1.1"
 description = "Turn API documentation (a docs URL, OpenAPI/Swagger, Postman, RAML, WSDL, GraphQL, an HTML page or pasted text) into an MCP server: an evidence-only entry, tested and live-verified, served by platform-mcp-hub. MCP server, CLI and Claude Code plugin."
 readme = "README.md"
 requires-python = ">=3.10"

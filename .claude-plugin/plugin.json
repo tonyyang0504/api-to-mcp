@@ -1,6 +1,6 @@
 {
   "name": "api-to-mcp",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Turn any platform's API documentation (URL, OpenAPI/Swagger, Postman, RAML, WSDL, GraphQL, an HTML page or pasted text) into a standard MCP server: an evidence-only entry with cited endpoints, contract tests and a live verification, served by platform-mcp-hub.",
   "author": { "name": "api-to-mcp contributors", "url": "https://github.com/tonyyang0504/api-to-mcp" },
   "homepage": "https://github.com/tonyyang0504/api-to-mcp",

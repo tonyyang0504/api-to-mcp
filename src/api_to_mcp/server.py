@@ -171,8 +171,8 @@ def _install_steps(what: str) -> str:
         rt = WS.ts_runtime_dir()
         if rt is not None:
             return f"cd {rt} && npm ci --ignore-scripts --no-audit --no-fund && npx tsc -p tsconfig.json"
-        return ("npm install -g platform-mcp-hub   # once it is published; until then build it from a platform-mcp checkout "
-                "(cd runtime/typescript && npm ci --ignore-scripts && npm run build) and set PLATFORM_MCP_HUB_TS_CLI=<checkout>/runtime/typescript/dist/cli.js")
+        return ("npm install -g platform-mcp-hub   # or point PLATFORM_MCP_HUB_TS_CLI at its dist/cli.js "
+                "(an npm install elsewhere, or a platform-mcp checkout built with npm ci --ignore-scripts && npm run build)")
     if what == "python_deps":
         return "pip install api-to-mcp-forge   # brings platform-mcp-hub, pyyaml, jsonschema, pytest, pytest-asyncio and respx (the gates' dependencies)"
     return ""
@@ -282,7 +282,8 @@ def _doctor_report(fix: bool) -> dict:
     probe_dir = WS.root if WS.root.exists() else next((p for p in WS.root.parents if p.exists()), WS.root)
     add("workspace writable", os.access(probe_dir, os.W_OK), str(WS.root), f"chmod u+w {probe_dir} or choose another directory ({_workspace.HOME_ENV})")
     py = WS.python()
-    probe = _run([py, "-c", "import sys, mcp, httpx, yaml, jwt, jsonschema, pytest, respx, pytest_asyncio, platform_mcp_hub; print(sys.version.split()[0], 'platform-mcp-hub', platform_mcp_hub.__version__)"],
+    # sys.path[0] is the current directory under -c: drop it so a stray numbers.py or yaml.py there cannot shadow a module
+    probe = _run([py, "-c", "import sys; sys.path = [p for p in sys.path if p not in ('', '.')]; import mcp, httpx, yaml, jwt, jsonschema, pytest, respx, pytest_asyncio, platform_mcp_hub; print(sys.version.split()[0], 'platform-mcp-hub', platform_mcp_hub.__version__)"],
                  env=WS.gate_env(_env()), timeout=60)
     add("python + gate dependencies", probe["ok"], f"{py}: " + (probe["stdout"].strip() if probe["ok"] else (probe["stderr"].strip().splitlines() or ["?"])[-1]), _install_steps("python_deps"))
     uv = _which("uv")
@@ -2190,7 +2191,7 @@ def _user_run_config(p: Path, entry: dict) -> tuple[Path, list[str], dict]:
         "stdio": " ".join(cmd),
         "http": " ".join(cmd) + " --http --port 8000   # Streamable HTTP on http://127.0.0.1:8000/mcp",
         "claude_code": f"claude mcp add {pid} -- " + " ".join(cmd),
-        "any_machine": f"uvx --from git+{HUB_REPO} platform-mcp-hub serve --entry {p.name}   # copy the entry file along; `uvx platform-mcp-hub ...` once it is published",
+        "any_machine": f"uvx platform-mcp-hub serve --entry {p.name}   # copy the entry file along",
         "contribute": f"to add it to the shared catalog: {_workspace.CHECKOUT_ENV}=<your platform-mcp checkout>, save_entry there, run the gates, open a pull request",
     }
     tools = entry["adapter"]["tools"]
