@@ -45,7 +45,8 @@ uv pip install "platform-mcp-hub @ git+https://github.com/tonyyang0504/platform-
 claude mcp add pokeapi -- "$PWD/.venv/bin/api-to-mcp" serve generic pokeapi
 ```
 
-Once published: `uvx api-to-mcp doctor`, `pip install api-to-mcp`.
+Once published: `uvx --from api-to-mcp-forge api-to-mcp doctor`, `pip install api-to-mcp-forge`.
+The PyPI package is `api-to-mcp-forge` (PyPI treats `api-to-mcp` as a duplicate of an older, unrelated `apitomcp`); the command is `api-to-mcp`.
 
 ## Where entries go
 

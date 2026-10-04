@@ -174,7 +174,7 @@ def _install_steps(what: str) -> str:
         return ("npm install -g platform-mcp-hub   # once it is published; until then build it from a platform-mcp checkout "
                 "(cd runtime/typescript && npm ci --ignore-scripts && npm run build) and set PLATFORM_MCP_HUB_TS_CLI=<checkout>/runtime/typescript/dist/cli.js")
     if what == "python_deps":
-        return "pip install api-to-mcp   # brings platform-mcp-hub, pyyaml, jsonschema, pytest, pytest-asyncio and respx (the gates' dependencies)"
+        return "pip install api-to-mcp-forge   # brings platform-mcp-hub, pyyaml, jsonschema, pytest, pytest-asyncio and respx (the gates' dependencies)"
     return ""
 
 
