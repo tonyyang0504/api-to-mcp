@@ -53,11 +53,6 @@ packages = ["src/api_to_mcp"]
 include = ["/src/api_to_mcp", "/README.md", "/LICENSE", "/NOTICE"]
 exclude = ["**/__pycache__"]
 
-# Until platform-mcp-hub is on PyPI, uv (the Claude Code plugin, `uv run`) takes it from the platform-mcp repository.
-# Remove this block once platform-mcp-hub 0.1.0 is published (RELEASE_CHECKLIST.md); pip ignores it.
-[tool.uv.sources]
-platform-mcp-hub = { git = "https://github.com/tonyyang0504/platform-mcp", branch = "main" }
-
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
 testpaths = ["tests"]

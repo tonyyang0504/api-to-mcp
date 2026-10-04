@@ -8,10 +8,9 @@ permissions:
 concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
-# api-to-mcp runs on platform-mcp-hub. Until platform-mcp-hub is on PyPI, CI builds it from a checkout of
-# tonyyang0504/platform-mcp. While that repository is private, the checkout reads it with the read-only deploy key in
-# the PLATFORM_MCP_DEPLOY_KEY secret; once it is public the secret can be deleted (an empty key falls back to the
-# public checkout).
+# api-to-mcp runs on platform-mcp-hub. CI builds it from a checkout of tonyyang0504/platform-mcp's main branch rather
+# than the PyPI release, so a runtime change that breaks api-to-mcp shows up here first, and the TypeScript runtime
+# the gates also run is built from the same checkout.
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -25,7 +24,6 @@ jobs:
         with:
           repository: tonyyang0504/platform-mcp
           path: _platform-mcp
-          ssh-key: ${{ secrets.PLATFORM_MCP_DEPLOY_KEY }}
           persist-credentials: false
       - uses: actions/setup-python@v7
         with: { python-version: "${{ matrix.python }}" }

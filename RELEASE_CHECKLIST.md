@@ -10,12 +10,6 @@ be on PyPI first (its own checklist: platform-mcp's `docs/RELEASE_CHECKLIST.md`)
    restrict it to tags `v*`.
 2. **PyPI pending trusted publisher**: pypi.org → Your account → Publishing → Add a new pending publisher → GitHub:
    project `api-to-mcp-forge`, owner `tonyyang0504`, repository `api-to-mcp`, workflow `release.yml`, environment `pypi`.
-3. After platform-mcp-hub 0.1.0 is on PyPI: delete the `[tool.uv.sources]` block in `pyproject.toml` (it points uv at
-   the platform-mcp repository until then), and in CI replace the platform-mcp checkout with
-   `pip install platform-mcp-hub` if you no longer want to test against its main branch.
-4. Once both repositories are public, delete the `PLATFORM_MCP_DEPLOY_KEY` secret here and the matching read-only
-   deploy key ("api-to-mcp CI (read-only)") on platform-mcp: CI then checks platform-mcp out anonymously.
-
 ## Release
 
 1. CI green on `main` (tests on 3.10/3.12/3.13 with both runtimes, ruff, CodeQL, secret scan).
